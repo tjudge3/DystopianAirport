@@ -22,7 +22,6 @@ class Flight {
     public void setOperationStatus(OperationStatus status) {
         operationStatus = status;
     }
-    //  Scheduled, ArrivalCancelDueCrash, CancelDuePassengerDisturbance, CancelDueDrunkPilot, CancelDueMaintenance, CancelNoPlane, Queued;
     public void setOperationStatus(String type) {
         switch(type) {
             case "Scheduled":
@@ -42,10 +41,7 @@ class Flight {
     String destinationOrigin;
     Date schedule;
     FlightType flightType;
-    //  Default is scheduled
     OperationStatus operationStatus = OperationStatus.Scheduled;
-
-    // Constructor
     public Flight(String flightNumber, String aircraftNumber, String destinationOrigin, Date schedule, FlightType flightType) {
         this.flightNumber = flightNumber;
         this.aircraftNumber = aircraftNumber;
@@ -53,8 +49,6 @@ class Flight {
         this.schedule = schedule;
         this.flightType = flightType;
     }
-
-    // Constructor
     public Flight() {
     }
 
