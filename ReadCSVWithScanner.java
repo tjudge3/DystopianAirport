@@ -16,15 +16,10 @@ public class ReadCSVWithScanner
         LinkedList<Flight> fltList = new LinkedList<>();
         try
         {
-            // open file input stream
             BufferedReader reader = new BufferedReader(new FileReader(filePath));
-
-            // read file line by line
             String line;
             Scanner scanner;
             int index = 0;
-            //  This flag is used if there is a header to ignore the first line of the CSV file
-            //  If there is no header,  set this to false.
             boolean firstLine = true;
             while ((line = reader.readLine()) != null)
             {
@@ -57,7 +52,6 @@ public class ReadCSVWithScanner
 
                 firstLine = false;
             }
-            //close reader
             reader.close();
         }
         catch (IOException e)
