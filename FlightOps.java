@@ -1,6 +1,4 @@
-//2022-10-21 - Lab8 - Dystopian Airport - tjudge
 package datastructures.dccc.edu;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -8,85 +6,61 @@ import java.util.LinkedList;
 import java.util.Stack;
 
 public class FlightOps {
-
-    LinkedList<Flight> flts = new LinkedList<>();
-
+    LinkedList<Flight> flights = new LinkedList<>();
     private void printFlights()
     {
-        for(Flight flt : flts)
+        for(Flight flights : flights)
         {
-            System.out.println(flt.toString());
+            System.out.println(flights.toString());
         }
     }
 
     private void removeCancelledFlights() {
         Stack removeStack = new Stack();
-
-        //  Remove flights with cancellation statuses,  use stack to avoid concurrency problem with for-next
-        for (Flight flt: flts)
+        for (Flight flights: flights)
         {
-            if (flt.operationStatus == Flight.OperationStatus.CancelDueCrash
-                    || flt.operationStatus == Flight.OperationStatus.CancelDueDrunkPilot
-                    || flt.operationStatus == Flight.OperationStatus.CancelDueMaintenance
-                    || flt.operationStatus == Flight.OperationStatus.CancelDuePassengerDisturbance
-                    || flt.operationStatus == Flight.OperationStatus.NavigationError
-                    || flt.operationStatus == Flight.OperationStatus.CancelNoPlane) {
+            if (flights.operationStatus == Flight.OperationStatus.CancelDueCrash || flights.operationStatus == Flight.OperationStatus.CancelDueDrunkPilot
+|| flights.operationStatus == Flight.OperationStatus.CancelDueMaintenance || flights.operationStatus == Flight.OperationStatus.CancelDuePassengerDisturbance
+|| flights.operationStatus == Flight.OperationStatus.NavigationError || flights.operationStatus == Flight.OperationStatus.CancelNoPlane) {
                 removeStack.push(flt);
             }
         }
         while (!removeStack.isEmpty()) {
-            flts.remove(removeStack.pop());
+            flights.remove(removeStack.pop());
         }
     }
-
-
-    //  Change statuses from default Scheduled to a random status.  Some statuses make sense only for Arrival or Departure so
-    //  FlightType is checked before setting
+    
     private void changeStatuses() {
-        for (Flight flt : flts) {
+        for (Flight flights : flights) {
             Flight.OperationStatus status = (Flight.OperationStatus) Flight.OperationStatus.getRandomStatus();
             if (flt.flightType == Flight.FlightType.Arrival) {
                 if (status == Flight.OperationStatus.CancelDueCrash || status == Flight.OperationStatus.NavigationError  || status == Flight.OperationStatus.Scheduled || status == Flight.OperationStatus.Queued) {
-                    flt.setOperationStatus(status);
+                    flights.setOperationStatus(status);
                 }
-                //  if status doesn't make sense, don't set it
-            } else if ((flt.flightType == Flight.FlightType.Arrival && status == Flight.OperationStatus.CancelDueMaintenance)
-                    || (flt.flightType == Flight.FlightType.Departure && status == Flight.OperationStatus.NavigationError)) {
+            } else if ((flights.flightType == Flight.FlightType.Arrival && status == Flight.OperationStatus.CancelDueMaintenance)
+                    || (flights.flightType == Flight.FlightType.Departure && status == Flight.OperationStatus.NavigationError)) {
                 continue;
             } else {
-                flt.setOperationStatus(status);
+                flights.setOperationStatus(status);
             }
         }
     }
-
-    // Move flights with Queued status to end of LinkedList
     private void moveQueuedFlights() {
         Stack moveStack = new Stack();
-        for (Flight flt : flts)
+        for (Flight flights : flightss)
         {
-
-            // Use a stack to move items to be removed
-            // Items can't be removed from within for-next because loop will hit a concurrency exception
-
-            if (flt.operationStatus == Flight.OperationStatus.Queued) {
-                moveStack.push(flt);
+            if (flights.operationStatus == Flight.OperationStatus.Queued) {
+                moveStack.push(flights);
             }
         }
-        //  Now we use the stack to move the items to end
         while (!moveStack.isEmpty()) {
-            // Save this item before removing
-            Flight flight = (Flight) moveStack.peek();
-            // Now remove it
-            flts.remove(moveStack.pop());
-            //  Add your code here
-            flts.addLast(flight);
-            //  add flight to bottom of LinkedList -- see addLast() method
-
+            Flight flight = (flights) moveStack.peek();
+            flights.remove(moveStack.pop());
+            flights.addLast(flight);
         }
     }
 
     private void presidentAndCroniesJumpTheQueue() {
-        //  President and his cronies jump the line
         SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yy HH:mm");
         try {
             Date date1 = sdf.parse("10/15/20 07:30");
@@ -96,9 +70,9 @@ public class FlightOps {
             Flight vipFlight2 = new Flight("Vip002", "AF-01", "CDG", date2, Flight.FlightType.Departure);
             Flight vipFlight3 = new Flight("Vip003", "AF-01", "CDG", date3, Flight.FlightType.Arrival);
 
-            flts.addFirst(vipFlight1);
-            flts.addFirst(vipFlight2);
-            flts.addFirst(vipFlight3);
+            flights.addFirst(vipFlight1);
+            flights.addFirst(vipFlight2);
+            flights.addFirst(vipFlight3);
         }
         catch (ParseException e)
         {
@@ -108,7 +82,7 @@ public class FlightOps {
 
     public void doSimuluation(String filePath) {
 
-        flts = initializeFlightList(filePath);
+        flights = initializeFlightList(filePath);
         changeStatuses();
         System.out.println("Changed statuses");
         printFlights();
@@ -124,16 +98,14 @@ public class FlightOps {
     }
 
     public static void main(String[] args) {
-        FlightOps fltOPs = new FlightOps();
+        FlightOps flightOPs = new FlightOps();
         String filePath = "./resources/Flights.csv";
-        fltOPs.doSimuluation(filePath);
+        flightOPs.doSimuluation(filePath);
     }
-
     public LinkedList initializeFlightList(String filePath) {
-        // Load flights from external file
         ReadCSVWithScanner csvReader = new ReadCSVWithScanner();
-        LinkedList fltList = csvReader.getFlightListFromCSV(filePath);
-        return fltList;
+        LinkedList flightList = csvReader.getFlightListFromCSV(filePath);
+        return flightList;
     }
 
 }
